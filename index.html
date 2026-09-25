@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aayanz PDF - All-in-One Online PDF Tools</title>
   
-  <!-- External JS Libraries for Comprehensive Client-side PDF Processing -->
+  <!-- External JS Libraries for Client-side PDF Processing -->
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -38,7 +38,6 @@
       min-height: 100vh;
     }
 
-    /* Header Navigation */
     header {
       background-color: #ffffff;
       border-bottom: 1px solid var(--border-color);
@@ -79,7 +78,6 @@
 
     nav a:hover { color: var(--primary-color); }
 
-    /* Layout Containers */
     main {
       flex: 1;
       max-width: 1280px;
@@ -116,7 +114,6 @@
       border: 1px solid #a5d6a7;
     }
 
-    /* Grid Layout for Tools */
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -169,7 +166,6 @@
       padding-bottom: 8px;
     }
 
-    /* Dynamic Tool Workspace Area */
     .tool-workspace {
       display: none;
       background: white;
@@ -184,7 +180,6 @@
     .tool-workspace h2 { margin-bottom: 10px; }
     .tool-workspace p { color: var(--text-muted); margin-bottom: 25px; }
 
-    /* Drop Zone */
     .drop-zone {
       border: 2px dashed #ccc;
       border-radius: 8px;
@@ -201,12 +196,14 @@
     }
 
     .btn {
+      display: inline-block;
       padding: 10px 24px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 15px;
       border: none;
       cursor: pointer;
+      text-decoration: none;
       transition: background 0.2s;
     }
 
@@ -244,7 +241,6 @@
       overflow-y: auto;
     }
 
-    /* Loader UI */
     .loader {
       display: none;
       margin: 20px 0;
@@ -252,7 +248,6 @@
       color: var(--primary-color);
     }
 
-    /* Result Output Container */
     #result-container {
       display: none;
       margin-top: 20px;
@@ -290,10 +285,9 @@
 </head>
 <body>
 
-  <!-- Navigation Header -->
   <header>
     <div class="logo" onclick="showDashboard()">
-      <span>🤝 Aayanz</span>PDF
+      <span>Aayanz</span>PDF
     </div>
     <nav>
       <ul>
@@ -307,9 +301,7 @@
     </nav>
   </header>
 
-  <!-- Main Content Body -->
   <main>
-    <!-- Dashboard Section -->
     <div id="dashboard">
       <section class="hero">
         <div class="free-badge">🎉 100% Free — No sign-up or limits required</div>
@@ -318,111 +310,90 @@
       </section>
 
       <section class="tools-grid">
-        <!-- Category 1: Organize -->
         <div class="category-title">Organize PDF</div>
-
         <div class="tool-card" onclick="openTool('merge')">
           <div class="tool-icon">🧩</div>
           <div class="tool-title">Merge PDF</div>
           <div class="tool-desc">Combine multiple PDF files into a single unified document.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('split')">
           <div class="tool-icon">✂️</div>
           <div class="tool-title">Split PDF</div>
           <div class="tool-desc">Separate specific pages or a set range from your PDF file.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('remove-pages')">
           <div class="tool-icon">🗑️</div>
           <div class="tool-title">Remove Pages</div>
           <div class="tool-desc">Delete unwanted pages directly from your PDF document.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('rotate')">
           <div class="tool-icon">🔄</div>
           <div class="tool-title">Rotate PDF</div>
           <div class="tool-desc">Rotate PDF pages clockwise or counterclockwise as needed.</div>
         </div>
 
-        <!-- Category 2: Optimize -->
         <div class="category-title">Optimize PDF</div>
-
         <div class="tool-card" onclick="openTool('compress')">
           <div class="tool-icon">🗜️</div>
           <div class="tool-title">Compress PDF</div>
           <div class="tool-desc">Reduce file size while maintaining maximum document quality.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('repair')">
           <div class="tool-icon">🛠️</div>
           <div class="tool-title">Repair PDF</div>
           <div class="tool-desc">Recover and repair damaged or corrupted PDF files.</div>
         </div>
 
-        <!-- Category 3: Convert TO PDF -->
         <div class="category-title">Convert to PDF</div>
-
         <div class="tool-card" onclick="openTool('word-to-pdf')">
           <div class="tool-icon">📝</div>
           <div class="tool-title">Word to PDF</div>
           <div class="tool-desc">Convert DOCX Word documents easily into PDF format.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('jpg-to-pdf')">
           <div class="tool-icon">🖼️</div>
           <div class="tool-title">JPG to PDF</div>
           <div class="tool-desc">Convert single or multiple images (JPG, PNG) into a PDF.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('html-to-pdf')">
           <div class="tool-icon">🌐</div>
           <div class="tool-title">HTML to PDF</div>
           <div class="tool-desc">Save web code or raw HTML text directly as a PDF.</div>
         </div>
 
-        <!-- Category 4: Convert FROM PDF -->
         <div class="category-title">Convert from PDF</div>
-
         <div class="tool-card" onclick="openTool('pdf-to-jpg')">
           <div class="tool-icon">📸</div>
           <div class="tool-title">PDF to JPG</div>
           <div class="tool-desc">Extract high-quality JPG images from each PDF page.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('pdf-to-text')">
           <div class="tool-icon">📄</div>
           <div class="tool-title">PDF to Text</div>
           <div class="tool-desc">Extract all readable text content from your PDF file.</div>
         </div>
 
-        <!-- Category 5: Edit & Security -->
         <div class="category-title">Edit & Security</div>
-
         <div class="tool-card" onclick="openTool('watermark')">
           <div class="tool-icon">💧</div>
           <div class="tool-title">Watermark</div>
           <div class="tool-desc">Add a custom text watermark across your document pages.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('page-number')">
           <div class="tool-icon">🔢</div>
           <div class="tool-title">Page Numbers</div>
           <div class="tool-desc">Add customizable page numbers to your PDF file automatically.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('protect')">
           <div class="tool-icon">🔒</div>
           <div class="tool-title">Protect PDF</div>
           <div class="tool-desc">Encrypt and lock your sensitive PDF file with a password.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('unlock')">
           <div class="tool-icon">🔓</div>
           <div class="tool-title">Unlock PDF</div>
           <div class="tool-desc">Remove password protection from your secured PDF document.</div>
         </div>
-
         <div class="tool-card" onclick="openTool('ocr')">
           <div class="tool-icon">👁️‍🗨️</div>
           <div class="tool-title">OCR PDF</div>
@@ -431,26 +402,23 @@
       </section>
     </div>
 
-    <!-- Workspace Container (Active Tool UI) -->
     <div id="workspace" class="tool-workspace">
       <h2 id="active-tool-title">Tool Title</h2>
       <p id="active-tool-desc">Description</p>
 
-      <!-- Drag and Drop Zone -->
       <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
         📄 Click to select files or drag & drop them here
         <input type="file" id="file-input" style="display: none;" onchange="handleFileSelect(event)">
       </div>
 
       <div id="file-list" style="display:none;"></div>
-
       <div id="dynamic-controls" class="controls-group"></div>
 
       <div class="loader" id="loader">⏳ Processing, please wait...</div>
 
       <div id="result-container">
         <p>🎉 Process completed successfully!</p>
-        <button id="download-btn" class="btn btn-primary" style="margin-top:10px;">Download File</button>
+        <a id="download-btn" class="btn btn-primary" style="margin-top:15px;" target="_blank">Download File</a>
         <textarea id="ocr-text-output" readonly></textarea>
       </div>
 
@@ -466,128 +434,30 @@
   </footer>
 
   <script>
-    // Global State
     let currentTool = '';
     let selectedFiles = [];
-    let processedBlob = null;
-    let processedFilename = '';
 
-    // PDF.js Worker Configuration
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-    // Tool Configurations
     const toolConfigs = {
-      'merge': {
-        title: 'Merge PDF',
-        desc: 'Select two or more PDF files to combine them into one.',
-        accept: '.pdf',
-        multiple: true
-      },
-      'split': {
-        title: 'Split PDF',
-        desc: 'Enter page range to extract (e.g., 1-3, 5).',
-        accept: '.pdf',
-        multiple: false,
-        controls: `<input type="text" id="split-range" class="input-field" placeholder="Enter page range (e.g., 1-3)">`
-      },
-      'remove-pages': {
-        title: 'Remove Pages',
-        desc: 'Enter page numbers you wish to delete.',
-        accept: '.pdf',
-        multiple: false,
-        controls: `<input type="text" id="remove-range" class="input-field" placeholder="Pages to remove (e.g., 2, 4)">`
-      },
-      'rotate': {
-        title: 'Rotate PDF',
-        desc: 'Select rotation angle for your document.',
-        accept: '.pdf',
-        multiple: false,
-        controls: `
-          <select id="rotate-angle" class="input-field">
-            <option value="90">90° Clockwise</option>
-            <option value="180">180° Upside Down</option>
-            <option value="270">270° Counter-Clockwise</option>
-          </select>`
-      },
-      'compress': {
-        title: 'Compress PDF',
-        desc: 'Optimize file size while preserving quality.',
-        accept: '.pdf',
-        multiple: false
-      },
-      'repair': {
-        title: 'Repair PDF',
-        desc: 'Rebuild and recover damaged PDF documents.',
-        accept: '.pdf',
-        multiple: false
-      },
-      'word-to-pdf': {
-        title: 'Word to PDF Converter',
-        desc: 'Upload a .docx Word document to convert.',
-        accept: '.docx',
-        multiple: false
-      },
-      'jpg-to-pdf': {
-        title: 'JPG to PDF Converter',
-        desc: 'Select image files to convert them to PDF.',
-        accept: 'image/jpeg, image/png',
-        multiple: true
-      },
-      'html-to-pdf': {
-        title: 'HTML to PDF',
-        desc: 'Type or paste HTML code or text below.',
-        accept: '',
-        noFileRequired: true,
-        controls: `<textarea id="html-input" class="input-field" style="height:120px;" placeholder="Type HTML or text here..."></textarea>`
-      },
-      'pdf-to-jpg': {
-        title: 'PDF to JPG Converter',
-        desc: 'Convert PDF pages into downloadable JPG images.',
-        accept: '.pdf',
-        multiple: false
-      },
-      'pdf-to-text': {
-        title: 'PDF to Text Extractor',
-        desc: 'Extract readable plain text content from your PDF.',
-        accept: '.pdf',
-        multiple: false
-      },
-      'watermark': {
-        title: 'Watermark PDF',
-        desc: 'Type text to overlay as a watermark.',
-        accept: '.pdf',
-        multiple: false,
-        controls: `<input type="text" id="watermark-text" class="input-field" placeholder="Watermark text (e.g., CONFIDENTIAL)">`
-      },
-      'page-number': {
-        title: 'Page Numbers',
-        desc: 'Page numbers will be added automatically at the bottom.',
-        accept: '.pdf',
-        multiple: false
-      },
-      'protect': {
-        title: 'Protect PDF',
-        desc: 'Set a password to secure your file.',
-        accept: '.pdf',
-        multiple: false,
-        controls: `<input type="password" id="pdf-password" class="input-field" placeholder="Enter password">`
-      },
-      'unlock': {
-        title: 'Unlock PDF',
-        desc: 'Enter the password to unlock the document.',
-        accept: '.pdf',
-        multiple: false,
-        controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter current password">`
-      },
-      'ocr': {
-        title: 'OCR PDF (Text Recognition)',
-        desc: 'Select a scanned image file to perform text extraction.',
-        accept: 'image/jpeg, image/png',
-        multiple: false
-      }
+      'merge': { title: 'Merge PDF', desc: 'Select two or more PDF files to combine them into one.', accept: '.pdf', multiple: true },
+      'split': { title: 'Split PDF', desc: 'Enter page range to extract (e.g., 1-3, 5).', accept: '.pdf', multiple: false, controls: `<input type="text" id="split-range" class="input-field" placeholder="Enter page range (e.g., 1-3)">` },
+      'remove-pages': { title: 'Remove Pages', desc: 'Enter page numbers you wish to delete.', accept: '.pdf', multiple: false, controls: `<input type="text" id="remove-range" class="input-field" placeholder="Pages to remove (e.g., 2, 4)">` },
+      'rotate': { title: 'Rotate PDF', desc: 'Select rotation angle for your document.', accept: '.pdf', multiple: false, controls: `<select id="rotate-angle" class="input-field"><option value="90">90° Clockwise</option><option value="180">180° Upside Down</option><option value="270">270° Counter-Clockwise</option></select>` },
+      'compress': { title: 'Compress PDF', desc: 'Optimize file size while preserving quality.', accept: '.pdf', multiple: false },
+      'repair': { title: 'Repair PDF', desc: 'Rebuild and recover damaged PDF documents.', accept: '.pdf', multiple: false },
+      'word-to-pdf': { title: 'Word to PDF Converter', desc: 'Upload a .docx Word document to convert.', accept: '.docx', multiple: false },
+      'jpg-to-pdf': { title: 'JPG to PDF Converter', desc: 'Select image files to convert them to PDF.', accept: 'image/jpeg, image/png', multiple: true },
+      'html-to-pdf': { title: 'HTML to PDF', desc: 'Type or paste HTML code or text below.', accept: '', noFileRequired: true, controls: `<textarea id="html-input" class="input-field" style="height:120px;" placeholder="Type HTML or text here..."></textarea>` },
+      'pdf-to-jpg': { title: 'PDF to JPG Converter', desc: 'Convert PDF pages into downloadable JPG images.', accept: '.pdf', multiple: false },
+      'pdf-to-text': { title: 'PDF to Text Extractor', desc: 'Extract readable plain text content from your PDF.', accept: '.pdf', multiple: false },
+      'watermark': { title: 'Watermark PDF', desc: 'Type text to overlay as a watermark.', accept: '.pdf', multiple: false, controls: `<input type="text" id="watermark-text" class="input-field" placeholder="Watermark text (e.g., CONFIDENTIAL)">` },
+      'page-number': { title: 'Page Numbers', desc: 'Page numbers will be added automatically at the bottom.', accept: '.pdf', multiple: false },
+      'protect': { title: 'Protect PDF', desc: 'Set a password to secure your file.', accept: '.pdf', multiple: false, controls: `<input type="password" id="pdf-password" class="input-field" placeholder="Enter password">` },
+      'unlock': { title: 'Unlock PDF', desc: 'Enter the password to unlock the document.', accept: '.pdf', multiple: false, controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter current password">` },
+      'ocr': { title: 'OCR PDF (Text Recognition)', desc: 'Select a scanned image file to perform text extraction.', accept: 'image/jpeg, image/png', multiple: false }
     };
 
-    // Navigation & Workspace Handlers
     function showDashboard() {
       document.getElementById('dashboard').style.display = 'block';
       document.getElementById('workspace').style.display = 'none';
@@ -610,8 +480,6 @@
       fileInput.multiple = config.multiple || false;
 
       document.getElementById('dynamic-controls').innerHTML = config.controls || '';
-      
-      // Hide drop-zone if tool doesn't require uploading file
       document.getElementById('drop-zone').style.display = config.noFileRequired ? 'none' : 'block';
 
       resetWorkspace();
@@ -619,8 +487,6 @@
 
     function resetWorkspace() {
       selectedFiles = [];
-      processedBlob = null;
-      processedFilename = '';
       document.getElementById('file-list').style.display = 'none';
       document.getElementById('file-list').innerHTML = '';
       document.getElementById('file-input').value = '';
@@ -630,7 +496,6 @@
       document.getElementById('process-btn').style.display = 'inline-block';
     }
 
-    // Drag and Drop Event Handling
     const dropZone = document.getElementById('drop-zone');
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -654,7 +519,6 @@
         selectedFiles.map(f => `• ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)`).join('<br>');
     }
 
-    // Main Processor Router
     async function processTool() {
       const config = toolConfigs[currentTool];
       if (!config.noFileRequired && selectedFiles.length === 0) {
@@ -694,24 +558,19 @@
       }
     }
 
-    // Helper: Show Output File
+    // Direct Direct Download Helper (Compatible with Mobile Browsers and WebViews)
     function showResult(blob, filename) {
-      processedBlob = blob;
-      processedFilename = filename;
       document.getElementById('result-container').style.display = 'block';
-      
       const downloadBtn = document.getElementById('download-btn');
-      downloadBtn.onclick = () => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(processedBlob);
-        link.download = processedFilename;
-        link.click();
+      
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        downloadBtn.href = reader.result;
+        downloadBtn.download = filename;
       };
+      reader.readAsDataURL(blob);
     }
 
-    /* ---------------- TOOL LOGICS ---------------- */
-
-    // 1. PDF Merge
     async function processMerge() {
       const mergedPdf = await PDFLib.PDFDocument.create();
       for (let file of selectedFiles) {
@@ -724,7 +583,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'merged_document.pdf');
     }
 
-    // 2. PDF Split
     async function processSplit() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
@@ -740,7 +598,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'split_document.pdf');
     }
 
-    // 3. Remove Pages
     async function processRemovePages() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
@@ -761,7 +618,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'pages_removed.pdf');
     }
 
-    // 4. Rotate PDF
     async function processRotate() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
@@ -776,16 +632,13 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'rotated_document.pdf');
     }
 
-    // 5. Compress PDF (Optimization Structure)
     async function processCompress() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
-      // Clean structure and strip unused streams
       const pdfBytes = await pdf.save({ useObjectStreams: true });
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'compressed_document.pdf');
     }
 
-    // 6. Repair PDF
     async function processRepair() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
@@ -793,7 +646,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'repaired_document.pdf');
     }
 
-    // 7. Word to PDF
     async function processWordToPdf() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const res = await mammoth.convertToHtml({ arrayBuffer: bytes });
@@ -809,7 +661,6 @@
       });
     }
 
-    // 8. JPG to PDF
     async function processJpgToPdf() {
       const pdfDoc = await PDFLib.PDFDocument.create();
       for (let file of selectedFiles) {
@@ -822,7 +673,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'images_converted.pdf');
     }
 
-    // 9. HTML to PDF
     async function processHtmlToPdf() {
       const text = document.getElementById('html-input').value;
       if (!text) throw new Error('HTML or text field is empty!');
@@ -837,11 +687,10 @@
       });
     }
 
-    // 10. PDF to JPG (Canvas Rendering Engine)
     async function processPdfToJpg() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-      const page = await pdf.getPage(1); // First page conversion
+      const page = await pdf.getPage(1);
       
       const viewport = page.getViewport({ scale: 1.5 });
       const canvas = document.createElement('canvas');
@@ -856,7 +705,6 @@
       }, 'image/jpeg');
     }
 
-    // 11. PDF to Text
     async function processPdfToText() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
@@ -876,7 +724,6 @@
       showResult(new Blob([fullText], { type: 'text/plain' }), 'extracted_text.txt');
     }
 
-    // 12. Watermark PDF
     async function processWatermark() {
       const text = document.getElementById('watermark-text').value || 'SAMPLE';
       const bytes = await selectedFiles[0].arrayBuffer();
@@ -900,7 +747,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'watermarked.pdf');
     }
 
-    // 13. Page Numbers
     async function processPageNumbers() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
@@ -922,7 +768,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'numbered_document.pdf');
     }
 
-    // 14. Protect PDF
     async function processProtect() {
       const pass = document.getElementById('pdf-password').value;
       if (!pass) throw new Error('Please enter a password!');
@@ -934,7 +779,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'protected.pdf');
     }
 
-    // 15. Unlock PDF
     async function processUnlock() {
       const pass = document.getElementById('unlock-password').value;
       const bytes = await selectedFiles[0].arrayBuffer();
@@ -944,7 +788,6 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'unlocked.pdf');
     }
 
-    // 16. OCR Image Engine (Tesseract.js)
     async function processOCR() {
       const file = selectedFiles[0];
       const result = await Tesseract.recognize(file, 'eng');
@@ -956,7 +799,6 @@
       showResult(new Blob([result.data.text], { type: 'text/plain' }), 'ocr_result.txt');
     }
 
-    // Utility: Parse range strings like "1-3, 5" to zero-based array
     function parsePageRange(rangeStr, maxPages) {
       const indices = [];
       const parts = rangeStr.split(',');
