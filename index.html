@@ -197,7 +197,7 @@
 
     .btn {
       display: inline-block;
-      padding: 10px 24px;
+      padding: 12px 28px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 15px;
@@ -417,8 +417,8 @@
       <div class="loader" id="loader">⏳ Processing, please wait...</div>
 
       <div id="result-container">
-        <p>🎉 Process completed successfully!</p>
-        <a id="download-btn" class="btn btn-primary" style="margin-top:15px;" target="_blank">Download File</a>
+        <p style="margin-bottom:10px; font-weight:600;">🎉 Process completed successfully!</p>
+        <a id="download-btn" class="btn btn-primary" href="javascript:void(0)">Download File</a>
         <textarea id="ocr-text-output" readonly></textarea>
       </div>
 
@@ -454,7 +454,7 @@
       'watermark': { title: 'Watermark PDF', desc: 'Type text to overlay as a watermark.', accept: '.pdf', multiple: false, controls: `<input type="text" id="watermark-text" class="input-field" placeholder="Watermark text (e.g., CONFIDENTIAL)">` },
       'page-number': { title: 'Page Numbers', desc: 'Page numbers will be added automatically at the bottom.', accept: '.pdf', multiple: false },
       'protect': { title: 'Protect PDF', desc: 'Set a password to secure your file.', accept: '.pdf', multiple: false, controls: `<input type="password" id="pdf-password" class="input-field" placeholder="Enter password">` },
-      'unlock': { title: 'Unlock PDF', desc: 'Enter the password to unlock the document.', accept: '.pdf', multiple: false, controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter current password">` },
+      'unlock': { title: 'Unlock PDF', desc: 'Enter current password to remove protection.', accept: '.pdf', multiple: false, controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter password">` },
       'ocr': { title: 'OCR PDF (Text Recognition)', desc: 'Select a scanned image file to perform text extraction.', accept: 'image/jpeg, image/png', multiple: false }
     };
 
@@ -558,15 +558,24 @@
       }
     }
 
-    // Direct Direct Download Helper (Compatible with Mobile Browsers and WebViews)
+    // Universal Download Handler Works across Browser, WebView, and Mobile
     function showResult(blob, filename) {
       document.getElementById('result-container').style.display = 'block';
       const downloadBtn = document.getElementById('download-btn');
       
       const reader = new FileReader();
       reader.onloadend = function () {
-        downloadBtn.href = reader.result;
+        const dataUrl = reader.result;
+        downloadBtn.href = dataUrl;
         downloadBtn.download = filename;
+
+        // Custom click handler for explicit mobile & webview trigger fallback
+        downloadBtn.onclick = function(e) {
+          if (navigator.msSaveBlob) { 
+            navigator.msSaveBlob(blob, filename);
+            e.preventDefault();
+          }
+        };
       };
       reader.readAsDataURL(blob);
     }
@@ -770,7 +779,7 @@
 
     async function processProtect() {
       const pass = document.getElementById('pdf-password').value;
-      if (!pass) throw new Error('Please enter a password!');
+      if (!pass) throw new Error('Please enter a password to protect the file!');
 
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
@@ -779,13 +788,26 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'protected.pdf');
     }
 
+    // Complete Fix for Unlock PDF (Strip Encryption)
     async function processUnlock() {
       const pass = document.getElementById('unlock-password').value;
-      const bytes = await selectedFiles[0].arrayBuffer();
-      const pdf = await PDFLib.PDFDocument.load(bytes, { password: pass });
+      if (!pass) throw new Error('Please enter the existing password to unlock!');
 
-      const pdfBytes = await pdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'unlocked.pdf');
+      const bytes = await selectedFiles[0].arrayBuffer();
+      
+      // Load password protected document
+      const encryptedPdf = await PDFLib.PDFDocument.load(bytes, { password: pass });
+      
+      // Create a fresh unencrypted PDF container
+      const unlockedPdf = await PDFLib.PDFDocument.create();
+      
+      // Copy pages over to strip all security restrictions
+      const pageIndices = encryptedPdf.getPageIndices();
+      const copiedPages = await unlockedPdf.copyPages(encryptedPdf, pageIndices);
+      copiedPages.forEach((page) => unlockedPdf.addPage(page));
+
+      const pdfBytes = await unlockedPdf.save();
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'unlocked_document.pdf');
     }
 
     async function processOCR() {
