@@ -80,7 +80,7 @@
 
     main {
       flex: 1;
-      max-width: 1280px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 40px 20px;
       width: 100%;
@@ -114,54 +114,63 @@
       border: 1px solid #a5d6a7;
     }
 
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+    /* List View Layout */
+    .tools-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .tool-card {
       background-color: var(--card-bg);
       border-radius: 8px;
-      padding: 24px 20px;
+      padding: 16px 24px;
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
       transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
       border: 1px solid #eaeaea;
     }
 
     .tool-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      transform: translateX(4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       border-color: #ddd;
     }
 
     .tool-icon {
-      font-size: 38px;
-      margin-bottom: 12px;
+      font-size: 30px;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .tool-details {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     .tool-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 3px;
     }
 
     .tool-desc {
       font-size: 13px;
       color: var(--text-muted);
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .category-title {
-      grid-column: 1 / -1;
       font-size: 20px;
       font-weight: 700;
       color: #444;
-      margin-top: 25px;
-      margin-bottom: 5px;
+      margin-top: 30px;
+      margin-bottom: 10px;
       border-bottom: 2px solid #ddd;
       padding-bottom: 8px;
     }
@@ -279,7 +288,8 @@
     @media (max-width: 768px) {
       header { padding: 15px 20px; }
       nav { display: none; }
-      .tools-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+      .tool-card { padding: 14px 16px; gap: 14px; }
+      .tool-icon { font-size: 24px; min-width: 30px; }
     }
   </style>
 </head>
@@ -304,100 +314,132 @@
   <main>
     <div id="dashboard">
       <section class="hero">
-        <div class="free-badge">🎉 100% Free — No sign-up or limits required</div>
+        <div class="free-badge">100% Free — No sign-up or limits required</div>
         <h1>Every tool you need to work with PDFs in one place</h1>
         <p>Process your PDF files securely right inside your browser for free</p>
       </section>
 
-      <section class="tools-grid">
+      <section class="tools-list">
         <div class="category-title">Organize PDF</div>
         <div class="tool-card" onclick="openTool('merge')">
-          <div class="tool-icon">🧩</div>
-          <div class="tool-title">Merge PDF</div>
-          <div class="tool-desc">Combine multiple PDF files into a single unified document.</div>
+          <div class="tool-icon">📄</div>
+          <div class="tool-details">
+            <div class="tool-title">Merge PDF</div>
+            <div class="tool-desc">Combine multiple PDF files into a single unified document.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('split')">
           <div class="tool-icon">✂️</div>
-          <div class="tool-title">Split PDF</div>
-          <div class="tool-desc">Separate specific pages or a set range from your PDF file.</div>
+          <div class="tool-details">
+            <div class="tool-title">Split PDF</div>
+            <div class="tool-desc">Separate specific pages or a set range from your PDF file.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('remove-pages')">
           <div class="tool-icon">🗑️</div>
-          <div class="tool-title">Remove Pages</div>
-          <div class="tool-desc">Delete unwanted pages directly from your PDF document.</div>
+          <div class="tool-details">
+            <div class="tool-title">Remove Pages</div>
+            <div class="tool-desc">Delete unwanted pages directly from your PDF document.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('rotate')">
           <div class="tool-icon">🔄</div>
-          <div class="tool-title">Rotate PDF</div>
-          <div class="tool-desc">Rotate PDF pages clockwise or counterclockwise as needed.</div>
+          <div class="tool-details">
+            <div class="tool-title">Rotate PDF</div>
+            <div class="tool-desc">Rotate PDF pages clockwise or counterclockwise as needed.</div>
+          </div>
         </div>
 
         <div class="category-title">Optimize PDF</div>
         <div class="tool-card" onclick="openTool('compress')">
-          <div class="tool-icon">🗜️</div>
-          <div class="tool-title">Compress PDF</div>
-          <div class="tool-desc">Reduce file size while maintaining maximum document quality.</div>
+          <div class="tool-icon">📦</div>
+          <div class="tool-details">
+            <div class="tool-title">Compress PDF</div>
+            <div class="tool-desc">Reduce file size while maintaining maximum document quality.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('repair')">
           <div class="tool-icon">🛠️</div>
-          <div class="tool-title">Repair PDF</div>
-          <div class="tool-desc">Recover and repair damaged or corrupted PDF files.</div>
+          <div class="tool-details">
+            <div class="tool-title">Repair PDF</div>
+            <div class="tool-desc">Recover and repair damaged or corrupted PDF files.</div>
+          </div>
         </div>
 
         <div class="category-title">Convert to PDF</div>
         <div class="tool-card" onclick="openTool('word-to-pdf')">
           <div class="tool-icon">📝</div>
-          <div class="tool-title">Word to PDF</div>
-          <div class="tool-desc">Convert DOCX Word documents easily into PDF format.</div>
+          <div class="tool-details">
+            <div class="tool-title">Word to PDF</div>
+            <div class="tool-desc">Convert DOCX Word documents easily into PDF format.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('jpg-to-pdf')">
           <div class="tool-icon">🖼️</div>
-          <div class="tool-title">JPG to PDF</div>
-          <div class="tool-desc">Convert single or multiple images (JPG, PNG) into a PDF.</div>
+          <div class="tool-details">
+            <div class="tool-title">JPG to PDF</div>
+            <div class="tool-desc">Convert single or multiple images (JPG, PNG) into a PDF.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('html-to-pdf')">
           <div class="tool-icon">🌐</div>
-          <div class="tool-title">HTML to PDF</div>
-          <div class="tool-desc">Save web code or raw HTML text directly as a PDF.</div>
+          <div class="tool-details">
+            <div class="tool-title">HTML to PDF</div>
+            <div class="tool-desc">Save web code or raw HTML text directly as a PDF.</div>
+          </div>
         </div>
 
         <div class="category-title">Convert from PDF</div>
         <div class="tool-card" onclick="openTool('pdf-to-jpg')">
           <div class="tool-icon">📸</div>
-          <div class="tool-title">PDF to JPG</div>
-          <div class="tool-desc">Extract high-quality JPG images from each PDF page.</div>
+          <div class="tool-details">
+            <div class="tool-title">PDF to JPG</div>
+            <div class="tool-desc">Extract high-quality JPG images from each PDF page.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('pdf-to-text')">
-          <div class="tool-icon">📄</div>
-          <div class="tool-title">PDF to Text</div>
-          <div class="tool-desc">Extract all readable text content from your PDF file.</div>
+          <div class="tool-icon">📋</div>
+          <div class="tool-details">
+            <div class="tool-title">PDF to Text</div>
+            <div class="tool-desc">Extract all readable text content from your PDF file.</div>
+          </div>
         </div>
 
         <div class="category-title">Edit & Security</div>
         <div class="tool-card" onclick="openTool('watermark')">
           <div class="tool-icon">💧</div>
-          <div class="tool-title">Watermark</div>
-          <div class="tool-desc">Add a custom text watermark across your document pages.</div>
+          <div class="tool-details">
+            <div class="tool-title">Watermark</div>
+            <div class="tool-desc">Add a custom text watermark across your document pages.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('page-number')">
           <div class="tool-icon">🔢</div>
-          <div class="tool-title">Page Numbers</div>
-          <div class="tool-desc">Add customizable page numbers to your PDF file automatically.</div>
+          <div class="tool-details">
+            <div class="tool-title">Page Numbers</div>
+            <div class="tool-desc">Add customizable page numbers to your PDF file automatically.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('protect')">
           <div class="tool-icon">🔒</div>
-          <div class="tool-title">Protect PDF</div>
-          <div class="tool-desc">Encrypt and lock your sensitive PDF file with a password.</div>
+          <div class="tool-details">
+            <div class="tool-title">Protect PDF</div>
+            <div class="tool-desc">Encrypt and lock your sensitive PDF file with a password.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('unlock')">
           <div class="tool-icon">🔓</div>
-          <div class="tool-title">Unlock PDF</div>
-          <div class="tool-desc">Remove password protection from your secured PDF document.</div>
+          <div class="tool-details">
+            <div class="tool-title">Unlock PDF</div>
+            <div class="tool-desc">Remove password protection from your secured PDF document.</div>
+          </div>
         </div>
         <div class="tool-card" onclick="openTool('ocr')">
-          <div class="tool-icon">👁️‍🗨️</div>
-          <div class="tool-title">OCR PDF</div>
-          <div class="tool-desc">Extract editable text from scanned documents or images.</div>
+          <div class="tool-icon">🔍</div>
+          <div class="tool-details">
+            <div class="tool-title">OCR PDF</div>
+            <div class="tool-desc">Extract editable text from scanned documents or images.</div>
+          </div>
         </div>
       </section>
     </div>
@@ -406,18 +448,18 @@
       <h2 id="active-tool-title">Tool Title</h2>
       <p id="active-tool-desc">Description</p>
 
-      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-        📄 Click to select files or drag & drop them here
+      <div class="drop-zone" id="drop-zone" onclick="triggerFileInput()">
+        Click to select files or drag & drop them here
         <input type="file" id="file-input" style="display: none;" onchange="handleFileSelect(event)">
       </div>
 
       <div id="file-list" style="display:none;"></div>
       <div id="dynamic-controls" class="controls-group"></div>
 
-      <div class="loader" id="loader">⏳ Processing, please wait...</div>
+      <div class="loader" id="loader">Processing, please wait...</div>
 
       <div id="result-container">
-        <p style="margin-bottom:10px; font-weight:600;">🎉 Process completed successfully!</p>
+        <p style="margin-bottom:10px; font-weight:600;">Process completed successfully!</p>
         <a id="download-btn" class="btn btn-primary" href="javascript:void(0)">Download File</a>
         <textarea id="ocr-text-output" readonly></textarea>
       </div>
@@ -436,6 +478,7 @@
   <script>
     let currentTool = '';
     let selectedFiles = [];
+    let currentObjectUrl = null;
 
     // Setup pdf.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -488,6 +531,10 @@
 
     function resetWorkspace() {
       selectedFiles = [];
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+      }
       document.getElementById('file-list').style.display = 'none';
       document.getElementById('file-list').innerHTML = '';
       document.getElementById('file-input').value = '';
@@ -495,6 +542,12 @@
       document.getElementById('ocr-text-output').style.display = 'none';
       document.getElementById('loader').style.display = 'none';
       document.getElementById('process-btn').style.display = 'inline-block';
+    }
+
+    function triggerFileInput() {
+      const fileInput = document.getElementById('file-input');
+      fileInput.value = '';
+      fileInput.click();
     }
 
     const dropZone = document.getElementById('drop-zone');
@@ -513,6 +566,7 @@
     }
 
     function handleFiles(files) {
+      if (files.length === 0) return;
       selectedFiles = files;
       const listContainer = document.getElementById('file-list');
       listContainer.style.display = 'block';
@@ -559,25 +613,18 @@
       }
     }
 
-    // Universal Download Handler with custom AayanzPDF file naming
+    // Direct ObjectURL Download Handler (solves large file issues & memory leaks)
     function showResult(blob, filename) {
       document.getElementById('result-container').style.display = 'block';
       const downloadBtn = document.getElementById('download-btn');
       
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        const dataUrl = reader.result;
-        downloadBtn.href = dataUrl;
-        downloadBtn.download = filename;
-
-        downloadBtn.onclick = function(e) {
-          if (navigator.msSaveBlob) { 
-            navigator.msSaveBlob(blob, filename);
-            e.preventDefault();
-          }
-        };
-      };
-      reader.readAsDataURL(blob);
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+      }
+      
+      currentObjectUrl = URL.createObjectURL(blob);
+      downloadBtn.href = currentObjectUrl;
+      downloadBtn.download = filename;
     }
 
     async function processMerge() {
@@ -711,6 +758,7 @@
       
       canvas.toBlob((blob) => {
         showResult(blob, 'AayanzPDF_page_1.jpg');
+        canvas.width = 0; // Release memory
       }, 'image/jpeg');
     }
 
@@ -788,51 +836,20 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_protected.pdf');
     }
 
-    // Unlock PDF using PDF.js Decryption
+    // Direct Native Vector PDF Unlock (No image pixelation or loss of searchable text)
     async function processUnlock() {
       const pass = document.getElementById('unlock-password').value;
-      if (!pass) throw new Error('Please enter the existing password to unlock!');
+      if (!pass) throw new Error('Please enter the password to unlock!');
 
       const bytes = await selectedFiles[0].arrayBuffer();
 
-      let pdf;
       try {
-        pdf = await pdfjsLib.getDocument({ data: bytes, password: pass }).promise;
+        const pdf = await PDFLib.PDFDocument.load(bytes, { password: pass });
+        const unlockedPdfBytes = await pdf.save();
+        showResult(new Blob([unlockedPdfBytes], { type: 'application/pdf' }), 'AayanzPDF_unlocked.pdf');
       } catch (e) {
-        throw new Error('Incorrect password or invalid PDF file!');
+        throw new Error('Incorrect password or invalid PDF file format!');
       }
-
-      const { jsPDF } = window.jspdf;
-      let outPdf = null;
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const pWidth = viewport.width * 0.264583;
-        const pHeight = viewport.height * 0.264583;
-
-        if (i === 1) {
-          outPdf = new jsPDF({
-            orientation: pWidth > pHeight ? 'l' : 'p',
-            unit: 'mm',
-            format: [pWidth, pHeight]
-          });
-          outPdf.addImage(imgData, 'JPEG', 0, 0, pWidth, pHeight);
-        } else {
-          outPdf.addPage([pWidth, pHeight], pWidth > pHeight ? 'l' : 'p');
-          outPdf.addImage(imgData, 'JPEG', 0, 0, pWidth, pHeight);
-        }
-      }
-
-      showResult(outPdf.output('blob'), 'AayanzPDF_unlocked.pdf');
     }
 
     async function processOCR() {
