@@ -437,6 +437,7 @@
     let currentTool = '';
     let selectedFiles = [];
 
+    // Setup pdf.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
     const toolConfigs = {
@@ -454,7 +455,7 @@
       'watermark': { title: 'Watermark PDF', desc: 'Type text to overlay as a watermark.', accept: '.pdf', multiple: false, controls: `<input type="text" id="watermark-text" class="input-field" placeholder="Watermark text (e.g., CONFIDENTIAL)">` },
       'page-number': { title: 'Page Numbers', desc: 'Page numbers will be added automatically at the bottom.', accept: '.pdf', multiple: false },
       'protect': { title: 'Protect PDF', desc: 'Set a password to secure your file.', accept: '.pdf', multiple: false, controls: `<input type="password" id="pdf-password" class="input-field" placeholder="Enter password">` },
-      'unlock': { title: 'Unlock PDF', desc: 'Enter current password to remove protection.', accept: '.pdf', multiple: false, controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter password">` },
+      'unlock': { title: 'Unlock PDF', desc: 'Enter current password to remove protection.', accept: '.pdf', multiple: false, controls: `<input type="password" id="unlock-password" class="input-field" placeholder="Enter PDF password">` },
       'ocr': { title: 'OCR PDF (Text Recognition)', desc: 'Select a scanned image file to perform text extraction.', accept: 'image/jpeg, image/png', multiple: false }
     };
 
@@ -558,7 +559,7 @@
       }
     }
 
-    // Universal Download Handler Works across Browser, WebView, and Mobile
+    // Universal Download Handler with custom AayanzPDF file naming
     function showResult(blob, filename) {
       document.getElementById('result-container').style.display = 'block';
       const downloadBtn = document.getElementById('download-btn');
@@ -569,7 +570,6 @@
         downloadBtn.href = dataUrl;
         downloadBtn.download = filename;
 
-        // Custom click handler for explicit mobile & webview trigger fallback
         downloadBtn.onclick = function(e) {
           if (navigator.msSaveBlob) { 
             navigator.msSaveBlob(blob, filename);
@@ -589,7 +589,7 @@
         pages.forEach(p => mergedPdf.addPage(p));
       }
       const pdfBytes = await mergedPdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'merged_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_merged.pdf');
     }
 
     async function processSplit() {
@@ -604,7 +604,7 @@
       pages.forEach(p => newPdf.addPage(p));
 
       const pdfBytes = await newPdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'split_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_split.pdf');
     }
 
     async function processRemovePages() {
@@ -624,7 +624,7 @@
       pages.forEach(p => newPdf.addPage(p));
 
       const pdfBytes = await newPdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'pages_removed.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_pages_removed.pdf');
     }
 
     async function processRotate() {
@@ -638,21 +638,21 @@
       });
 
       const pdfBytes = await pdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'rotated_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_rotated.pdf');
     }
 
     async function processCompress() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
       const pdfBytes = await pdf.save({ useObjectStreams: true });
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'compressed_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_compressed.pdf');
     }
 
     async function processRepair() {
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
       const pdfBytes = await pdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'repaired_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_repaired.pdf');
     }
 
     async function processWordToPdf() {
@@ -664,7 +664,7 @@
       
       doc.html(`<div>${res.value}</div>`, {
         callback: function (d) {
-          showResult(d.output('blob'), 'word_converted.pdf');
+          showResult(d.output('blob'), 'AayanzPDF_word_converted.pdf');
         },
         x: 10, y: 10, width: 180, windowWidth: 800
       });
@@ -679,7 +679,7 @@
         page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
       }
       const pdfBytes = await pdfDoc.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'images_converted.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_images_converted.pdf');
     }
 
     async function processHtmlToPdf() {
@@ -690,7 +690,7 @@
       const doc = new jsPDF();
       doc.html(`<div>${text}</div>`, {
         callback: function (d) {
-          showResult(d.output('blob'), 'html_converted.pdf');
+          showResult(d.output('blob'), 'AayanzPDF_html_converted.pdf');
         },
         x: 10, y: 10, width: 180, windowWidth: 800
       });
@@ -710,7 +710,7 @@
       await page.render({ canvasContext: ctx, viewport: viewport }).promise;
       
       canvas.toBlob((blob) => {
-        showResult(blob, 'pdf_page_1.jpg');
+        showResult(blob, 'AayanzPDF_page_1.jpg');
       }, 'image/jpeg');
     }
 
@@ -730,11 +730,11 @@
       textArea.style.display = 'block';
       textArea.value = fullText;
 
-      showResult(new Blob([fullText], { type: 'text/plain' }), 'extracted_text.txt');
+      showResult(new Blob([fullText], { type: 'text/plain' }), 'AayanzPDF_extracted_text.txt');
     }
 
     async function processWatermark() {
-      const text = document.getElementById('watermark-text').value || 'SAMPLE';
+      const text = document.getElementById('watermark-text').value || 'AayanzPDF';
       const bytes = await selectedFiles[0].arrayBuffer();
       const pdf = await PDFLib.PDFDocument.load(bytes);
       const font = await pdf.embedFont(PDFLib.StandardFonts.HelveticaBold);
@@ -753,7 +753,7 @@
       });
 
       const pdfBytes = await pdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'watermarked.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_watermarked.pdf');
     }
 
     async function processPageNumbers() {
@@ -774,7 +774,7 @@
       });
 
       const pdfBytes = await pdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'numbered_document.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_numbered.pdf');
     }
 
     async function processProtect() {
@@ -785,29 +785,54 @@
       const pdf = await PDFLib.PDFDocument.load(bytes);
 
       const pdfBytes = await pdf.save({ userPassword: pass, ownerPassword: pass });
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'protected.pdf');
+      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_protected.pdf');
     }
 
-    // Complete Fix for Unlock PDF (Strip Encryption)
+    // Unlock PDF using PDF.js Decryption
     async function processUnlock() {
       const pass = document.getElementById('unlock-password').value;
       if (!pass) throw new Error('Please enter the existing password to unlock!');
 
       const bytes = await selectedFiles[0].arrayBuffer();
-      
-      // Load password protected document
-      const encryptedPdf = await PDFLib.PDFDocument.load(bytes, { password: pass });
-      
-      // Create a fresh unencrypted PDF container
-      const unlockedPdf = await PDFLib.PDFDocument.create();
-      
-      // Copy pages over to strip all security restrictions
-      const pageIndices = encryptedPdf.getPageIndices();
-      const copiedPages = await unlockedPdf.copyPages(encryptedPdf, pageIndices);
-      copiedPages.forEach((page) => unlockedPdf.addPage(page));
 
-      const pdfBytes = await unlockedPdf.save();
-      showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'unlocked_document.pdf');
+      let pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: bytes, password: pass }).promise;
+      } catch (e) {
+        throw new Error('Incorrect password or invalid PDF file!');
+      }
+
+      const { jsPDF } = window.jspdf;
+      let outPdf = null;
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pWidth = viewport.width * 0.264583;
+        const pHeight = viewport.height * 0.264583;
+
+        if (i === 1) {
+          outPdf = new jsPDF({
+            orientation: pWidth > pHeight ? 'l' : 'p',
+            unit: 'mm',
+            format: [pWidth, pHeight]
+          });
+          outPdf.addImage(imgData, 'JPEG', 0, 0, pWidth, pHeight);
+        } else {
+          outPdf.addPage([pWidth, pHeight], pWidth > pHeight ? 'l' : 'p');
+          outPdf.addImage(imgData, 'JPEG', 0, 0, pWidth, pHeight);
+        }
+      }
+
+      showResult(outPdf.output('blob'), 'AayanzPDF_unlocked.pdf');
     }
 
     async function processOCR() {
@@ -818,7 +843,7 @@
       textArea.style.display = 'block';
       textArea.value = result.data.text;
 
-      showResult(new Blob([result.data.text], { type: 'text/plain' }), 'ocr_result.txt');
+      showResult(new Blob([result.data.text], { type: 'text/plain' }), 'AayanzPDF_ocr_result.txt');
     }
 
     function parsePageRange(rangeStr, maxPages) {
