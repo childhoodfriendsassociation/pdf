@@ -114,7 +114,6 @@
       border: 1px solid #a5d6a7;
     }
 
-    /* List View Layout */
     .tools-list {
       display: flex;
       flex-direction: column;
@@ -142,7 +141,7 @@
     }
 
     .tool-icon {
-      font-size: 30px;
+      font-size: 24px;
       min-width: 40px;
       text-align: center;
     }
@@ -289,7 +288,7 @@
       header { padding: 15px 20px; }
       nav { display: none; }
       .tool-card { padding: 14px 16px; gap: 14px; }
-      .tool-icon { font-size: 24px; min-width: 30px; }
+      .tool-icon { font-size: 20px; min-width: 30px; }
     }
   </style>
 </head>
@@ -315,7 +314,7 @@
     <div id="dashboard">
       <section class="hero">
         <div class="free-badge">100% Free — No sign-up or limits required</div>
-        <h1>Aayanz Sadaqah Project</h1>
+        <h1>Every tool you need to work with PDFs in one place</h1>
         <p>Process your PDF files securely right inside your browser for free</p>
       </section>
 
@@ -391,14 +390,14 @@
 
         <div class="category-title">Convert from PDF</div>
         <div class="tool-card" onclick="openTool('pdf-to-jpg')">
-          <div class="tool-icon">📸</div>
+          <div class="tool-icon">🖼️</div>
           <div class="tool-details">
             <div class="tool-title">PDF to JPG</div>
             <div class="tool-desc">Extract high-quality JPG images from each PDF page.</div>
           </div>
         </div>
         <div class="tool-card" onclick="openTool('pdf-to-text')">
-          <div class="tool-icon">📋</div>
+          <div class="tool-icon">📄</div>
           <div class="tool-details">
             <div class="tool-title">PDF to Text</div>
             <div class="tool-desc">Extract all readable text content from your PDF file.</div>
@@ -480,7 +479,7 @@
     let selectedFiles = [];
     let currentObjectUrl = null;
 
-    // Setup pdf.js worker
+    // PDF.js Worker Configuration
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
     const toolConfigs = {
@@ -613,11 +612,12 @@
       }
     }
 
-    // Direct ObjectURL Download Handler (solves large file issues & memory leaks)
+    // FIXED: Download ObjectURL and Reliable Link Generator
     function showResult(blob, filename) {
       document.getElementById('result-container').style.display = 'block';
       const downloadBtn = document.getElementById('download-btn');
       
+      // Revoke older URL if exists
       if (currentObjectUrl) {
         URL.revokeObjectURL(currentObjectUrl);
       }
@@ -758,7 +758,6 @@
       
       canvas.toBlob((blob) => {
         showResult(blob, 'AayanzPDF_page_1.jpg');
-        canvas.width = 0; // Release memory
       }, 'image/jpeg');
     }
 
@@ -836,7 +835,7 @@
       showResult(new Blob([pdfBytes], { type: 'application/pdf' }), 'AayanzPDF_protected.pdf');
     }
 
-    // Direct Native Vector PDF Unlock (No image pixelation or loss of searchable text)
+    // FIXED: Robust Unlock PDF Logic using pdf.js + pdf-lib
     async function processUnlock() {
       const pass = document.getElementById('unlock-password').value;
       if (!pass) throw new Error('Please enter the password to unlock!');
@@ -844,11 +843,45 @@
       const bytes = await selectedFiles[0].arrayBuffer();
 
       try {
-        const pdf = await PDFLib.PDFDocument.load(bytes, { password: pass });
-        const unlockedPdfBytes = await pdf.save();
+        // PDF.js securely decrypts the protected document
+        const loadingTask = pdfjsLib.getDocument({ data: bytes, password: pass });
+        const pdfDoc = await loadingTask.promise;
+
+        const newPdf = await PDFLib.PDFDocument.create();
+
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: 2.0 });
+
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+          const imgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const imgBytes = await fetch(imgDataUrl).then(res => res.arrayBuffer());
+          const embeddedImg = await newPdf.embedJpg(imgBytes);
+
+          const newPage = newPdf.addPage([viewport.width / 2.0, viewport.height / 2.0]);
+          newPage.drawImage(embeddedImg, {
+            x: 0,
+            y: 0,
+            width: newPage.getWidth(),
+            height: newPage.getHeight()
+          });
+
+          // Free canvas memory
+          canvas.width = 0;
+          canvas.height = 0;
+        }
+
+        const unlockedPdfBytes = await newPdf.save();
         showResult(new Blob([unlockedPdfBytes], { type: 'application/pdf' }), 'AayanzPDF_unlocked.pdf');
+
       } catch (e) {
-        throw new Error('Incorrect password or invalid PDF file format!');
+        throw new Error('Incorrect password or unable to unlock this document.');
       }
     }
 
